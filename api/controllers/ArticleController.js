@@ -1,13 +1,29 @@
+const {Article} = require('../../models')
+
 module.exports = {
-    index(req, res){
-        res.status(200).json({
-            message: 'articles all!'
-        })
+    async index(req, res){
+        try{
+            articles = await Article.findAll({
+                limit: 10
+            })
+            res.send(articles)
+        }
+        catch(err){
+            res.status(500).send({
+                error: 'An error has occured trying to get the articles'
+            })
+        }
     },
 
-    create(req, res){
-        res.status(200).json({
-            message: 'articles post!'
-        })
-    }
+    async create (req, res) {
+        try{
+            const article = await Article.create(req.body)
+            res.send(article)
+        }
+        catch(err){
+            res.status(500).send({
+                error: 'An error has occured trying to create the article'
+            })
+        }
+    },
 }
