@@ -23,7 +23,7 @@ module.exports = {
                 type: 'articles',
                 q: req.query.q
             })
-            //res.send(result.hits.hits)
+            
             const ids = result.hits.hits.map((item) => {
                 return item._id
             })
@@ -46,6 +46,29 @@ module.exports = {
         try{
             const article = await Article.create(req.body)
             res.send(article)
+        }
+        catch(err){
+            res.status(500).send({
+                error: 'An error has occured trying to create the article'
+            })
+        }
+    },
+
+    async delete (req, res) {
+        try{
+            const article = await Article.findByPk(req.params.id)
+            if(article){
+                article.destroy()
+
+                res.status(200).json({
+                    message: 'Deleted successfully'
+                })   
+            }
+            else{
+                res.status(404).json({
+                    message: 'Not found'
+                })
+            }
         }
         catch(err){
             res.status(500).send({
